@@ -1,0 +1,1233 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>כלי אימוני RACI לניהול תהליכים</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: #3a3a3a;
+            min-height: 100vh;
+            direction: rtl;
+            color: #ffffff;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 300;
+            color: #b8ff00;
+            letter-spacing: -1px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            color: #e0e0e0;
+            font-weight: 300;
+        }
+
+        .main-content {
+            background: #4a4a4a;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            overflow: hidden;
+            min-height: 600px;
+            border: 1px solid rgba(184, 255, 0, 0.2);
+        }
+
+        .navigation {
+            background: linear-gradient(135deg, #3a3a3a 0%, #424242 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-item {
+            padding: 12px 30px;
+            background: #525252;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(184, 255, 0, 0.2);
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .nav-item:hover {
+            background: #5a5a5a;
+            border-color: #b8ff00;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(184, 255, 0, 0.3);
+            color: #b8ff00;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #b8ff00 0%, #8fc700 100%);
+            color: #2c2c2c;
+            font-weight: 600;
+            border-color: #b8ff00;
+            box-shadow: 0 5px 20px rgba(184, 255, 0, 0.4);
+        }
+
+        .section {
+            padding: 40px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section h2 {
+            color: #b8ff00;
+            font-size: 2em;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #b8ff00;
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .motivation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .card {
+            background: #545454;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(184, 255, 0, 0.1);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            border-color: #b8ff00;
+            box-shadow: 0 12px 40px rgba(184, 255, 0, 0.2);
+        }
+
+        .card h3 {
+            color: #b8ff00;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .card ul {
+            list-style: none;
+            padding-right: 0;
+        }
+
+        .card li {
+            margin: 10px 0;
+            padding-right: 25px;
+            position: relative;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .card li:before {
+            content: "→";
+            position: absolute;
+            right: 0;
+            color: #b8ff00;
+            font-weight: bold;
+        }
+
+        .warning-card {
+            background: #545454;
+            border-right: 5px solid #ffa500;
+        }
+
+        .warning-card h3 {
+            color: #ffa500;
+        }
+
+        .warning-card li:before {
+            content: "⚠";
+            color: #ffa500;
+        }
+
+        .raci-definition {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .raci-item {
+            background: #4a4a4a;
+            border: 3px solid;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .raci-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(184, 255, 0, 0.3);
+        }
+
+        .raci-r { 
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, rgba(255,107,107,0.1) 0%, rgba(255,107,107,0.05) 100%);
+        }
+        .raci-a { 
+            border-color: #4ecdc4;
+            background: linear-gradient(135deg, rgba(78,205,196,0.1) 0%, rgba(78,205,196,0.05) 100%);
+        }
+        .raci-c { 
+            border-color: #ffa500;
+            background: linear-gradient(135deg, rgba(255,165,0,0.1) 0%, rgba(255,165,0,0.05) 100%);
+        }
+        .raci-i { 
+            border-color: #b8ff00;
+            background: linear-gradient(135deg, rgba(184,255,0,0.1) 0%, rgba(184,255,0,0.05) 100%);
+        }
+
+        .raci-letter {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .raci-item h3 {
+            color: #ffffff;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+
+        .raci-item p {
+            color: #e0e0e0;
+            line-height: 1.5;
+        }
+
+        .lotr-example {
+            background: linear-gradient(135deg, #3a3a3a 0%, #4a4a4a 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+            border: 2px solid #b8ff00;
+        }
+
+        .lotr-example h3 {
+            color: #b8ff00;
+            margin-bottom: 20px;
+        }
+
+        .lotr-characters {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .character {
+            background: rgba(184, 255, 0, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            min-width: 150px;
+            transition: transform 0.3s ease;
+            border: 1px solid rgba(184, 255, 0, 0.3);
+        }
+
+        .character:hover {
+            transform: translateY(-5px);
+            background: rgba(184, 255, 0, 0.2);
+            box-shadow: 0 10px 30px rgba(184, 255, 0, 0.2);
+        }
+
+        .character-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .character h4 {
+            color: #b8ff00;
+            margin-bottom: 10px;
+        }
+
+        .process-builder {
+            background: #404040;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            border: 1px solid rgba(184, 255, 0, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            color: #b8ff00;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #505050;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #2c2c2c;
+            color: #ffffff;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #b8ff00;
+            box-shadow: 0 0 0 3px rgba(184, 255, 0, 0.1);
+            background: #333333;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #b8ff00 0%, #8fc700 100%);
+            color: #2c2c2c;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(184, 255, 0, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4ecdc4 0%, #3db8b0 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #ffa500 0%, #ff8c00 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+            color: white;
+        }
+
+        .matrix-container {
+            overflow-x: auto;
+            margin: 20px 0;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #2c2c2c;
+        }
+
+        .matrix-table th {
+            background: linear-gradient(135deg, #404040 0%, #505050 100%);
+            color: #b8ff00;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            border: 1px solid #505050;
+        }
+
+        .matrix-table td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #505050;
+            background: #3d3d3d;
+            color: #ffffff;
+        }
+
+        .matrix-table tr td:first-child {
+            font-weight: bold;
+            background: linear-gradient(135deg, #4a4a4a 0%, #545454 100%);
+            color: #b8ff00;
+            border: 1px solid #606060;
+        }
+
+        .role-cell {
+            background: #333333 !important;
+            min-width: 60px;
+        }
+
+        .role-select {
+            width: 100%;
+            border: none;
+            background: transparent;
+            font-size: 1.1em;
+            font-weight: bold;
+            text-align: center;
+            cursor: pointer;
+            padding: 5px;
+            color: #ffffff;
+        }
+
+        .role-select option {
+            background: #2c2c2c;
+        }
+
+        .validation-results {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .validation-success {
+            background: rgba(78, 205, 196, 0.2);
+            border: 1px solid #4ecdc4;
+            color: #4ecdc4;
+        }
+
+        .validation-warning {
+            background: rgba(255, 165, 0, 0.2);
+            border: 1px solid #ffa500;
+            color: #ffa500;
+        }
+
+        .validation-error {
+            background: rgba(255, 107, 107, 0.2);
+            border: 1px solid #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin: 5px;
+            color: #e0e0e0;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #505050;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .step.active .step-number {
+            background: linear-gradient(135deg, #b8ff00 0%, #8fc700 100%);
+            color: #2c2c2c;
+        }
+
+        .step.completed .step-number {
+            background: #4ecdc4;
+        }
+
+        .resource-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .resource-card {
+            background: #4a4a4a;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            border-top: 5px solid #b8ff00;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(184, 255, 0, 0.2);
+        }
+
+        .resource-card h3 {
+            color: #b8ff00;
+            margin-bottom: 15px;
+        }
+
+        .resource-card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resource-card li {
+            color: #e0e0e0;
+            margin: 8px 0;
+            padding-right: 20px;
+            position: relative;
+        }
+
+        .resource-card li:before {
+            content: "•";
+            color: #b8ff00;
+            font-weight: bold;
+            position: absolute;
+            right: 0;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .nav-item {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>כלי אימוני RACI</h1>
+            <p>למנהלים שרוצים לעבוד עם בהירות, אחריות ומיקוד</p>
+        </div>
+
+        <div class="main-content">
+            <div class="navigation">
+                <div class="nav-item active" data-section="1">
+                    מוטיבציה ומודל
+                </div>
+                <div class="nav-item" data-section="2">
+                    בונה מטריצה
+                </div>
+                <div class="nav-item" data-section="3">
+                    משאבים נוספים
+                </div>
+            </div>
+
+            <!-- Section 1: Motivation & Model -->
+            <div id="section1" class="section active">
+                <h2>לפני שמתחילים – למה RACI?</h2>
+                
+                <div class="motivation-grid">
+                    <div class="card">
+                        <h3>RACI אפקטיבי במיוחד כש...</h3>
+                        <ul>
+                            <li>יש ריבוי בעלי עניין בתהליך</li>
+                            <li>יש חוסר בהירות לגבי "מי עושה מה"</li>
+                            <li>משימות נופלות בין הכיסאות</li>
+                            <li>מנהלים פרויקט עם יותר מ-3 אנשים</li>
+                            <li>היו עיכובים או קונפליקטים בפרויקטים קודמים</li>
+                        </ul>
+                    </div>
+
+                    <div class="card warning-card">
+                        <h3>אבל RACI פחות מתאים אם...</h3>
+                        <ul>
+                            <li>מדובר בתהליך קטן, קצר ומיידי</li>
+                            <li>הצוות עובד באופן אינטואיטיבי או Agile</li>
+                            <li>אין הרבה ממשקים או בעלי תפקידים בתהליך</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h2>מה זה מודל RACI?</h2>
+                
+                <div class="card" style="background: linear-gradient(135deg, #5a5a5a 0%, #525252 100%); margin-bottom: 30px; border: 2px solid #b8ff00; box-shadow: 0 10px 30px rgba(184, 255, 0, 0.2);">
+                    <p style="font-size: 1.15em; line-height: 1.8; color: #ffffff;"><strong style="color: #b8ff00; font-size: 1.2em;">RACI</strong> הוא כלי פשוט למיפוי אחריות בתהליכים מורכבים. הוא עוזר לנו להגדיר מי עושה מה, מי מקבל החלטות, מי רק יועץ, ומי פשוט צריך להישאר מעודכן. בכך מונע בלבול, מייעל תקשורת, ומקצר תהליכים.</p>
+                </div>
+                
+                <div class="raci-definition">
+                    <div class="raci-item raci-r">
+                        <div class="raci-letter" style="color: #e74c3c;">R</div>
+                        <h3>Responsible</h3>
+                        <p><strong>אחראי לביצוע</strong></p>
+                        <p>מי שמבצע את המשימה בפועל</p>
+                    </div>
+
+                    <div class="raci-item raci-a">
+                        <div class="raci-letter" style="color: #2980b9;">A</div>
+                        <h3>Accountable</h3>
+                        <p><strong>אחראי סופי</strong></p>
+                        <p>מי שמוודא שהמשימה התבצעה – נושא באחריות הסופית</p>
+                    </div>
+
+                    <div class="raci-item raci-c">
+                        <div class="raci-letter" style="color: #f39c12;">C</div>
+                        <h3>Consulted</h3>
+                        <p><strong>יועץ מקצועי</strong></p>
+                        <p>מי שנותן חוות דעת, מומחה רלוונטי</p>
+                    </div>
+
+                    <div class="raci-item raci-i">
+                        <div class="raci-letter" style="color: #27ae60;">I</div>
+                        <h3>Informed</h3>
+                        <p><strong>מעודכן</strong></p>
+                        <p>מי שצריך לדעת שהמשימה בוצעה – אבל לא מעורב ישירות</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>הבחנה חדה:</h3>
+                    <p><strong>A = בעל השליטה והאחריות</strong> | <strong>R = הידיים על ההגה</strong></p>
+                    <p>אם יש בעיה – מחפשים את ה-A | אם צריך להבין איפה זה עומד – פונים ל-R</p>
+                </div>
+
+                <div class="lotr-example">
+                    <h3>מכירים את שר הטבעות?</h3>
+                    <p>לפעמים הכי קל להבין מודל בעזרת סיפור מוכר. בואו ניקח את הסיפור של ג'. ר. ר. טולקין "שר הטבעות".</p>
+                    <p>המשימה של אחוות הטבעת הייתה <strong>להשמיד את הטבעת</strong>. בואו נראה איך RACI עזר להם להבין את המשימה שלפניהם:</p>
+                    
+                    <div class="lotr-characters">
+                        <div class="character">
+                            <div class="character-icon">🧑</div>
+                            <h4>Frodo</h4>
+                            <p style="color: #e74c3c; font-weight: bold; font-size: 1.5em;">R</p>
+                            <p><strong>מבצע</strong></p>
+                            <p>זה שתכל'ס לוקח את הטבעת למורדור</p>
+                        </div>
+                        <div class="character">
+                            <div class="character-icon">🧙‍♂️</div>
+                            <h4>Gandalf</h4>
+                            <p style="color: #2980b9; font-weight: bold; font-size: 1.5em;">A</p>
+                            <p><strong>אחראי סופי</strong></p>
+                            <p>מדריך, מקבל החלטות, מוביל את המהלך</p>
+                        </div>
+                        <div class="character">
+                            <div class="character-icon">⚔️</div>
+                            <h4>Elrond, Sam, Aragorn ועוד</h4>
+                            <p style="color: #f39c12; font-weight: bold; font-size: 1.5em;">C/I</p>
+                            <p><strong>יועצים או מעודכנים</strong></p>
+                            <p>עוזרים, נותנים דעתם או מקבלים עדכונים</p>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 20px; text-align: center; font-size: 1.1em; font-weight: bold; color: white;">ברגע שאנחנו ממפים תהליך (גם אם מורכב) דרך RACI, אנחנו מבינים מי באמת אחראי, מי רק שותף, ומי תומך מהצד.</p>
+                </div>
+
+                <div class="card">
+                    <h3>למה זה חשוב למנהלים?</h3>
+                    <ul>
+                        <li>פחות בלבול תפקידים</li>
+                        <li>פחות "חשבתי שהוא עושה את זה"</li>
+                        <li>תיאום ציפיות חד בין חברי הצוות</li>
+                        <li>קיצור תהליכים</li>
+                        <li>מניעה של כשלי תקשורת</li>
+                    </ul>
+                    <p><strong>זה לא רק כלי – זו דרך חשיבה שתסייע לנהל יותר בביטחון ובבהירות.</strong></p>
+                </div>
+
+                <div style="text-align: center; margin: 40px 0;">
+                    <button class="btn btn-success" id="goToBuilder">
+                        בואו נתחיל לבנות מטריצה!
+                    </button>
+                </div>
+            </div>
+
+            <!-- Section 2: Matrix Builder -->
+            <div id="section2" class="section">
+                <h2>בונה מטריצת RACI</h2>
+                
+                <div class="step-indicator">
+                    <div class="step active" id="step1-indicator">
+                        <span>בחירת תהליך</span>
+                        <div class="step-number">1</div>
+                    </div>
+                    <div class="step" id="step2-indicator">
+                        <span>שלבי התהליך</span>
+                        <div class="step-number">2</div>
+                    </div>
+                    <div class="step" id="step3-indicator">
+                        <span>בעלי תפקידים</span>
+                        <div class="step-number">3</div>
+                    </div>
+                    <div class="step" id="step4-indicator">
+                        <span>מיפוי RACI</span>
+                        <div class="step-number">4</div>
+                    </div>
+                    <div class="step" id="step5-indicator">
+                        <span>בדיקה</span>
+                        <div class="step-number">5</div>
+                    </div>
+                </div>
+
+                <!-- Step 1: Process Selection -->
+                <div id="builder-step1" class="process-builder">
+                    <h3>שלב 1: בחירת תהליך לעבודה עם RACI</h3>
+                    
+                    <div class="card">
+                        <h4>כדאי לשאול לפני שמתחילים:</h4>
+                        <ul>
+                            <li>האם בתהליך הזה יש יותר מ-3 אנשים?</li>
+                            <li>האם קרה בו בלבול תפקידי בעבר?</li>
+                            <li>האם קשה לדעת "אצל מי זה תקוע"?</li>
+                            <li>האם המעורבים בו חוזרים שוב ושוב עם שאלות?</li>
+                        </ul>
+                        <p><strong>אם התשובה היא "כן" לפחות על אחת – התהליך הזה מתאים לעבודה עם RACI.</strong></p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="processName">שם התהליך:</label>
+                        <input type="text" id="processName" placeholder="לדוגמה: השקה של מוצר חדש, גיוס עובד חדש, אישור תקציב">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="processDescription">תיאור קצר של התהליך:</label>
+                        <textarea id="processDescription" rows="3" placeholder="תיאור קצר של התהליך והמטרה שלו"></textarea>
+                    </div>
+
+                    <button class="btn" id="nextStep1">המשך לשלב הבא ←</button>
+                </div>
+
+                <!-- Step 2: Process Steps -->
+                <div id="builder-step2" class="process-builder hidden">
+                    <h3>שלב 2: כתוב את שלבי התהליך</h3>
+                    
+                    <div class="card">
+                        <p>כדאי לכתוב 5-7 שלבים מרכזיים, לא חייב להיות מושלם. אפשר תמיד לעדכן מאוחר יותר.</p>
+                    </div>
+
+                    <div id="stepsContainer">
+                        <div class="form-group">
+                            <label>שלב 1:</label>
+                            <input type="text" class="step-input" placeholder="תיאור השלב">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-warning" id="addStepBtn">+ הוסף שלב</button>
+                    <button class="btn" id="nextStep2">המשך לשלב הבא ←</button>
+                    <button class="btn btn-danger" id="backStep2">→ חזור</button>
+                </div>
+
+                <!-- Step 3: Stakeholders -->
+                <div id="builder-step3" class="process-builder hidden">
+                    <h3>שלב 3: זהה את בעלי התפקידים המעורבים</h3>
+                    
+                    <div class="card">
+                        <p>לא רק מי שנראה ברור – גם מי שהשפעתו עקיפה. חשוב לחשוב על כל מי שצריך לדעת, לאשר, לבצע או לייעץ.</p>
+                    </div>
+
+                    <div id="stakeholdersContainer">
+                        <div class="form-group">
+                            <label>בעל תפקיד 1:</label>
+                            <input type="text" class="stakeholder-input" placeholder="לדוגמה: מנהל פרויקט, מפתח, מעצב">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-warning" id="addStakeholderBtn">+ הוסף בעל תפקיד</button>
+                    <button class="btn" id="nextStep3">המשך לשלב הבא ←</button>
+                    <button class="btn btn-danger" id="backStep3">→ חזור</button>
+                </div>
+
+                <!-- Step 4: RACI Matrix -->
+                <div id="builder-step4" class="process-builder hidden">
+                    <h3>שלב 4: מיפוי RACI</h3>
+                    
+                    <div class="card">
+                        <p>עכשיו נבנה את המטריצה! לכל שלב ולכל תפקיד, יש לבחור את התפקיד המתאים:</p>
+                        <ul style="display: flex; justify-content: space-around; flex-wrap: wrap; margin: 10px 0; list-style: none;">
+                            <li><strong style="color: #e74c3c;">R</strong> - מבצע</li>
+                            <li><strong style="color: #2980b9;">A</strong> - אחראי סופי</li>
+                            <li><strong style="color: #f39c12;">C</strong> - יועץ</li>
+                            <li><strong style="color: #27ae60;">I</strong> - מעודכן</li>
+                        </ul>
+                    </div>
+
+                    <div class="matrix-container">
+                        <table class="matrix-table" id="raciMatrix">
+                            <thead>
+                                <tr>
+                                    <th>שלבי התהליך</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <button class="btn" id="nextStep4">בדוק את המטריצה ←</button>
+                    <button class="btn btn-danger" id="backStep4">→ חזור</button>
+                </div>
+
+                <!-- Step 5: Validation -->
+                <div id="builder-step5" class="process-builder hidden">
+                    <h3>שלב 5: בדיקת איכות המטריצה</h3>
+                    
+                    <div id="validationResults"></div>
+
+                    <div class="card">
+                        <h4>⚠️ מוקשים נפוצים:</h4>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; margin: 10px 0;">
+                                <tr style="background: #505050;">
+                                    <th style="padding: 10px; border: 1px solid #606060; color: #b8ff00;">מוקש</th>
+                                    <th style="padding: 10px; border: 1px solid #606060; color: #b8ff00;">תוצאה</th>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #606060;">אין A ברור</td>
+                                    <td style="padding: 10px; border: 1px solid #606060;">בלבול, תירוצים, דחיות</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #606060;">יותר מדי C</td>
+                                    <td style="padding: 10px; border: 1px solid #606060;">פינג-פונג דעות, קושי להתקדם</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #606060;">כל הצוות I</td>
+                                    <td style="padding: 10px; border: 1px solid #606060;">תקשורת רועשת, איבוד פוקוס</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin: 30px 0;">
+                        <button class="btn btn-success" id="exportBtn">ייצא את המטריצה</button>
+                        <button class="btn" id="startOverBtn">התחל מחדש</button>
+                        <button class="btn btn-danger" id="backStep5">→ חזור</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Resources -->
+            <div id="section3" class="section">
+                <h2>משאבים נוספים</h2>
+                
+                <div class="resource-grid">
+                    <div class="resource-card">
+                        <h3>חומרי קריאה מומלצים</h3>
+                        <ul>
+                            <li>מדריך RACI מפורט של PMI</li>
+                            <li>איך להטמיע RACI בארגון</li>
+                            <li>טעויות נפוצות במטריצת RACI</li>
+                            <li>RACI לעומת RASCI ו-DACI</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h3>טיפים למנהלים</h3>
+                        <ul>
+                            <li>להתחיל עם פרויקט פיילוט קטן</li>
+                            <li>לשתף את הצוות בבניית המטריצה</li>
+                            <li>לעדכן את המטריצה באופן שוטף</li>
+                            <li>להשתמש במטריצה בישיבות סטטוס</li>
+                            <li>להגדיר ציפיות ברורות מההתחלה</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h3>כלים נוספים</h3>
+                        <ul>
+                            <li>תבניות Excel למטריצת RACI</li>
+                            <li>אפליקציות לניהול פרויקטים עם RACI</li>
+                            <li>מחשבון עומס עבודה על בסיס RACI</li>
+                            <li>סימולטור תרחישים</li>
+                        </ul>
+                    </div>
+
+                    <div class="resource-card">
+                        <h3>דוגמאות מהשטח</h3>
+                        <ul>
+                            <li>RACI להשקת מוצר דיגיטלי</li>
+                            <li>RACI לתהליך גיוס עובדים</li>
+                            <li>RACI לפרויקט שדרוג IT</li>
+                            <li>RACI לתהליך אישור תקציב</li>
+                            <li>RACI למעבר למשרד חדש</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card" style="background: linear-gradient(135deg, #3d3d3d 0%, #484848 100%); color: white; margin-top: 30px; border: 1px solid #b8ff00;">
+                    <h3>השלבים הבאים</h3>
+                    <ol style="margin-right: 20px;">
+                        <li>לבחור תהליך אחד קונקרטי להתחיל איתו</li>
+                        <li>להזמין את הצוות הרלוונטי לפגישת עבודה</li>
+                        <li>לבנות יחד את המטריצה (45-60 דקות)</li>
+                        <li>לשתף את המטריצה עם כל המעורבים</li>
+                        <li>לעקוב אחרי היישום ולהתאים במידת הצורך</li>
+                    </ol>
+                    <p style="margin-top: 20px;"><strong>💪 זכרו: RACI זה לא קסם – זה כלי. ההצלחה תלויה ביישום עקבי ובמחויבות של כל הצוות.</strong></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentStep = 1;
+        let processSteps = [];
+        let stakeholders = [];
+        let raciMatrix = {};
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation handlers
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    const section = parseInt(this.dataset.section);
+                    showSection(section);
+                });
+            });
+
+            // Button handlers
+            document.getElementById('goToBuilder')?.addEventListener('click', () => showSection(2));
+            
+            // Step navigation
+            document.getElementById('nextStep1')?.addEventListener('click', () => nextStep(2));
+            document.getElementById('nextStep2')?.addEventListener('click', () => nextStep(3));
+            document.getElementById('backStep2')?.addEventListener('click', () => nextStep(1));
+            document.getElementById('nextStep3')?.addEventListener('click', () => nextStep(4));
+            document.getElementById('backStep3')?.addEventListener('click', () => nextStep(2));
+            document.getElementById('nextStep4')?.addEventListener('click', () => nextStep(5));
+            document.getElementById('backStep4')?.addEventListener('click', () => nextStep(3));
+            document.getElementById('backStep5')?.addEventListener('click', () => nextStep(4));
+            
+            // Add buttons
+            document.getElementById('addStepBtn')?.addEventListener('click', addStep);
+            document.getElementById('addStakeholderBtn')?.addEventListener('click', addStakeholder);
+            
+            // Export and reset
+            document.getElementById('exportBtn')?.addEventListener('click', exportMatrix);
+            document.getElementById('startOverBtn')?.addEventListener('click', startOver);
+        });
+
+        // Show section
+        function showSection(sectionNum) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById('section' + sectionNum).classList.add('active');
+            
+            // Add active class to selected nav item
+            document.querySelectorAll('.nav-item')[sectionNum - 1].classList.add('active');
+        }
+
+        // Navigate between steps
+        function nextStep(step) {
+            // Save current data
+            if (currentStep === 2) saveSteps();
+            if (currentStep === 3) saveStakeholders();
+
+            // Hide all steps
+            for (let i = 1; i <= 5; i++) {
+                const stepDiv = document.getElementById('builder-step' + i);
+                if (stepDiv) stepDiv.classList.add('hidden');
+                
+                const indicator = document.getElementById('step' + i + '-indicator');
+                if (indicator) indicator.classList.remove('active');
+            }
+
+            // Show selected step
+            document.getElementById('builder-step' + step).classList.remove('hidden');
+            document.getElementById('step' + step + '-indicator').classList.add('active');
+
+            currentStep = step;
+
+            // Special actions
+            if (step === 4) buildMatrix();
+            if (step === 5) validateMatrix();
+        }
+
+        // Add step
+        function addStep() {
+            const container = document.getElementById('stepsContainer');
+            const stepCount = container.querySelectorAll('.step-input').length + 1;
+            
+            const newStep = document.createElement('div');
+            newStep.className = 'form-group';
+            newStep.innerHTML = `
+                <label>שלב ${stepCount}:</label>
+                <input type="text" class="step-input" placeholder="תיאור השלב">
+            `;
+            container.appendChild(newStep);
+        }
+
+        // Add stakeholder
+        function addStakeholder() {
+            const container = document.getElementById('stakeholdersContainer');
+            const count = container.querySelectorAll('.stakeholder-input').length + 1;
+            
+            const newStakeholder = document.createElement('div');
+            newStakeholder.className = 'form-group';
+            newStakeholder.innerHTML = `
+                <label>בעל תפקיד ${count}:</label>
+                <input type="text" class="stakeholder-input" placeholder="תפקיד או שם">
+            `;
+            container.appendChild(newStakeholder);
+        }
+
+        // Save steps
+        function saveSteps() {
+            processSteps = [];
+            document.querySelectorAll('.step-input').forEach(input => {
+                if (input.value.trim()) {
+                    processSteps.push(input.value.trim());
+                }
+            });
+        }
+
+        // Save stakeholders
+        function saveStakeholders() {
+            stakeholders = [];
+            document.querySelectorAll('.stakeholder-input').forEach(input => {
+                if (input.value.trim()) {
+                    stakeholders.push(input.value.trim());
+                }
+            });
+        }
+
+        // Build matrix
+        function buildMatrix() {
+            saveSteps();
+            saveStakeholders();
+
+            const table = document.getElementById('raciMatrix');
+            const thead = table.querySelector('thead tr');
+            const tbody = table.querySelector('tbody');
+
+            // Clear and rebuild
+            thead.innerHTML = '<th>שלבי התהליך</th>';
+            tbody.innerHTML = '';
+
+            // Add headers
+            stakeholders.forEach(stakeholder => {
+                const th = document.createElement('th');
+                th.textContent = stakeholder;
+                thead.appendChild(th);
+            });
+
+            // Add rows
+            processSteps.forEach((step, stepIndex) => {
+                const tr = document.createElement('tr');
+                
+                const stepCell = document.createElement('td');
+                stepCell.textContent = step;
+                tr.appendChild(stepCell);
+
+                stakeholders.forEach((stakeholder, stakeholderIndex) => {
+                    const td = document.createElement('td');
+                    td.className = 'role-cell';
+                    
+                    const select = document.createElement('select');
+                    select.className = 'role-select';
+                    select.id = `raci-${stepIndex}-${stakeholderIndex}`;
+                    select.innerHTML = `
+                        <option value="">-</option>
+                        <option value="R">R</option>
+                        <option value="A">A</option>
+                        <option value="C">C</option>
+                        <option value="I">I</option>
+                    `;
+                    
+                    select.addEventListener('change', function() {
+                        this.style.color = getColorForRole(this.value);
+                        saveMatrixData();
+                    });
+                    
+                    td.appendChild(select);
+                    tr.appendChild(td);
+                });
+
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Get color for role
+        function getColorForRole(role) {
+            switch(role) {
+                case 'R': return '#e74c3c';
+                case 'A': return '#2980b9';
+                case 'C': return '#f39c12';
+                case 'I': return '#27ae60';
+                default: return '#ffffff';
+            }
+        }
+
+        // Save matrix data
+        function saveMatrixData() {
+            raciMatrix = {};
+            processSteps.forEach((step, stepIndex) => {
+                raciMatrix[step] = {};
+                stakeholders.forEach((stakeholder, stakeholderIndex) => {
+                    const select = document.getElementById(`raci-${stepIndex}-${stakeholderIndex}`);
+                    if (select && select.value) {
+                        raciMatrix[step][stakeholder] = select.value;
+                    }
+                });
+            });
+        }
+
+        // Validate matrix
+        function validateMatrix() {
+            saveMatrixData();
+            
+            const results = document.getElementById('validationResults');
+            results.innerHTML = '';
+            
+            let warnings = [];
+            let errors = [];
+            let successes = [];
+
+            // Check each step
+            processSteps.forEach(step => {
+                const stepRoles = raciMatrix[step] || {};
+                const roles = Object.values(stepRoles);
+                
+                if (!roles.includes('R')) {
+                    errors.push(`❌ שלב "${step}" - אין אחראי ביצוע (R)`);
+                }
+                if (!roles.includes('A')) {
+                    errors.push(`❌ שלב "${step}" - אין אחראי סופי (A)`);
+                }
+                if (roles.filter(r => r === 'A').length > 1) {
+                    warnings.push(`⚠️ שלב "${step}" - יש יותר מאחראי סופי אחד (A)`);
+                }
+            });
+
+            // Display results
+            if (errors.length === 0 && warnings.length === 0) {
+                successes.push('✅ המטריצה נראית מצוין! כל השלבים מכוסים כראוי');
+            }
+
+            if (successes.length > 0) {
+                const successDiv = document.createElement('div');
+                successDiv.className = 'validation-results validation-success';
+                successDiv.innerHTML = '<h4>הצלחה!</h4>' + successes.join('<br>');
+                results.appendChild(successDiv);
+            }
+
+            if (warnings.length > 0) {
+                const warningDiv = document.createElement('div');
+                warningDiv.className = 'validation-results validation-warning';
+                warningDiv.innerHTML = '<h4>אזהרות:</h4>' + warnings.join('<br>');
+                results.appendChild(warningDiv);
+            }
+
+            if (errors.length > 0) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'validation-results validation-error';
+                errorDiv.innerHTML = '<h4>שגיאות שחובה לתקן:</h4>' + errors.join('<br>');
+                results.appendChild(errorDiv);
+            }
+        }
+
+        // Export matrix
+        function exportMatrix() {
+            saveMatrixData();
+            
+            const processName = document.getElementById('processName').value || 'RACI Matrix';
+            let csvContent = 'שלבי התהליך,' + stakeholders.join(',') + '\n';
+            
+            processSteps.forEach(step => {
+                let row = step;
+                stakeholders.forEach(stakeholder => {
+                    row += ',' + (raciMatrix[step]?.[stakeholder] || '-');
+                });
+                csvContent += row + '\n';
+            });
+            
+            // Download
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = processName + '_RACI.csv';
+            link.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Start over
+        function startOver() {
+            if (confirm('האם לאפס את כל הנתונים ולהתחיל מחדש?')) {
+                currentStep = 1;
+                processSteps = [];
+                stakeholders = [];
+                raciMatrix = {};
+                
+                document.getElementById('processName').value = '';
+                document.getElementById('processDescription').value = '';
+                
+                document.getElementById('stepsContainer').innerHTML = `
+                    <div class="form-group">
+                        <label>שלב 1:</label>
+                        <input type="text" class="step-input" placeholder="תיאור השלב">
+                    </div>
+                `;
+                
+                document.getElementById('stakeholdersContainer').innerHTML = `
+                    <div class="form-group">
+                        <label>בעל תפקיד 1:</label>
+                        <input type="text" class="stakeholder-input" placeholder="לדוגמה: מנהל פרויקט, מפתח, מעצב">
+                    </div>
+                `;
+                
+                nextStep(1);
+            }
+        }
+    </script>
+</body>
+</html>
